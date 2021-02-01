@@ -1,0 +1,47 @@
+main {
+  text-align: center;
+  div {
+    background-color: #b0b6b5;
+    width: 100%;
+
+    form {
+      input[type='url'] {
+        width: 50%;
+        line-height: 35px;
+        margin-right: 25px;
+        margin-bottom: 25px;
+        margin-top: 25px;
+      }
+      button {
+        margin-top: 25px;
+        padding: 5px 20px;
+        font-size: 25px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: gray;
+      }
+
+      label {
+        margin-right: 25px;
+        margin-left: 10px;
+        margin-bottom: 25px;
+        font-size: 25px;
+        cursor: pointer;
+      }
+    }
+    span {
+        display: inline-block;
+        margin-right: 50px;
+        font-size: 30px;
+        text-align: center;
+        font-weight: 600;
+      }
+  }
+}
+
+.spans{
+  height: 100px;
+  text-align: center;
+  line-height: 100px;
+}
