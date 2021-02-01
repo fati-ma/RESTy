@@ -1,26 +1,68 @@
 import React from 'react';
 import '../styles/form.scss';
+import superagent from 'superagent'
 
 class Form extends React.Component {
+
     constructor(props) {
         super(props);
-
+        // add state.words here and initialize it
         this.state = {
             url: '',
             method: ''
-        };
+        }
     }
 
     handleChange = (e) => {
-
         e.preventDefault();
+        console.log(e.target.value);
 
         let url = e.target.url.value;
         let method = e.target.method.value;
         this.setState({ url, method });
 
-        console.log(this.state.method);
-    };
+        superagent.get(url)
+            .then(data => {
+
+                // let count = data.body.count; 
+                // let results = data.body.results;
+
+                this.props.handler(data)
+
+
+            })
+
+        // switch (method) {
+        //     case 'GET':
+        //         superagent.get(url).then((data) => {
+        //             this.props.handler(data);
+        //         });
+        //         break;
+        //     case 'POST':
+        //         superagent.post(url).then((data) => {
+        //             this.props.handler(data);
+        //         });
+        //         break;
+        //     case 'DELETE':
+        //         superagent.delete(url).then((data) => {
+        //             this.props.handler(data);
+        //         });
+        //         break;
+        //     case 'PUT':
+        //         superagent.put(url).then((data) => {
+        //             this.props.handler(data);
+        //         });
+        //         break;
+
+        //     default:
+        //         break;
+        // }
+
+    }
+
+
+
+
 
     render() {
         return (
@@ -33,23 +75,21 @@ class Form extends React.Component {
                             <button type="submit"> GO </button>
                         </div>
                         <div>
+                            <input type="radio" value="Get " name="method" defaultChecked />
                             <label for="method">Get</label>
-                            <input type="radio" value="Get " name="method" />
-                            <label for="method">Post</label>
                             <input type="radio" value="Post " name="method" />
-                            <label for="method">Delete</label>
+                            <label for="method">Post</label>
                             <input type="radio" value="Delete " name="method" />
-                            <label for="method">Put</label>
+                            <label for="method">Delete</label>
                             <input type="radio" value="Put " name="method" />
+                            <label for="method">Put</label>
                         </div>
                     </form>
-                    <div class='spans'>
-                        <span>{this.state.method}</span>
-                        <span>{this.state.url}</span>
-                    </div>
+
+
                 </div>
             </main>
-        );
+        )
     }
 }
 
