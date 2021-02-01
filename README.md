@@ -8,6 +8,8 @@
 
 * For best experience go to the root of your local machine folders and create the directoty from there to clone your repo
 
+* Points: 1 & 2 , do them only if you didn't do them before and you're creating a new app
+
 1. Run the command `npx create-react-app name-of-app`
 
 2. Run `npm install node-sass@4.14.1`
@@ -16,18 +18,22 @@
 
 4. Write your code
 
-5. Run `npm run start`
+5. Dependencies: 
+
+![dep](assets/dependencies.PNG)
+
+6. Run `npm run start`
 
 Now you will get something similar to the image below on `localhost:3000`
 
-![resty-1](assets/new-resty-1.PNG)
+![resty-1](assets/ressty-1.PNG)
 
 
 Then add the URL and choose the method then hit `GO`
 
 you will get something similar to this
 
-![resty-2](assets/new-resty-2.PNG)
+![resty-2](assets/ressty-2.PNG)
 
 
 
