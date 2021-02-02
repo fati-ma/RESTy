@@ -1,5 +1,6 @@
 import React from 'react';
 import '../styles/form.scss';
+import { If, Then, Else } from './If';
 import superagent from 'superagent'
 
 class Form extends React.Component {
@@ -9,56 +10,78 @@ class Form extends React.Component {
         // add state.words here and initialize it
         this.state = {
             url: '',
-            method: ''
+            method: '',
+            body:'',
+            whilefetchData: false
         }
     }
 
-    handleChange = (e) => {
+    handleChange = async (e) => {
         e.preventDefault();
         console.log(e.target.value);
 
         let url = e.target.url.value;
         let method = e.target.method.value;
+        let body = e.target.body.value
+
         this.setState({ url, method });
 
-        superagent.get(url)
-            .then(data => {
+        switch (method) {
+            case 'GET':
+                await superagent
+                    .get(url)
+                    .then((data) => {
+                        let info = { url, method, body };
+                        console.log('info:', info);
+                        let history;
+                        let check;
+                        this.setState({ whilefetchData: false });
 
-                // let count = data.body.count; 
-                // let results = data.body.results;
+                        if (localStorage.getItem('history')) {
+                            history = JSON.parse(localStorage.getItem('history'));
+                            history.forEach((element) => {
+                                element.url === info.url && element.method === info.method ? (check = true) : (check = false);
+                            });
+                            if (check) {
+                                this.props.handler(data);
+                            } else {
+                                history.push(info);
+                                localStorage.setItem('history', JSON.stringify(history));
+                                this.props.handler(data);
+                            }
+                        } else {
+                            history = [];
+                            localStorage.setItem('history', JSON.stringify(history));
+                        }
+                        console.log('history', history);
+                    })
+                    .catch((err) => {
+                        this.setState({ whilefetchData: false });
+                        console.log(err.message);
+                        this.props.errorHandler(err.message);
+                    });
 
-                this.props.handler(data)
+                break;
+            case 'POST':
+                superagent.post(url).then((data) => {
+                    this.props.handler(data);
+                });
+                break;
+            case 'DELETE':
+                superagent.delete(url).then((data) => {
+                    this.props.handler(data);
+                });
+                break;
+            case 'PUT':
+                superagent.put(url).then((data) => {
+                    this.props.handler(data);
+                });
+                break;
 
-
-            })
-
-        // switch (method) {
-        //     case 'GET':
-        //         superagent.get(url).then((data) => {
-        //             this.props.handler(data);
-        //         });
-        //         break;
-        //     case 'POST':
-        //         superagent.post(url).then((data) => {
-        //             this.props.handler(data);
-        //         });
-        //         break;
-        //     case 'DELETE':
-        //         superagent.delete(url).then((data) => {
-        //             this.props.handler(data);
-        //         });
-        //         break;
-        //     case 'PUT':
-        //         superagent.put(url).then((data) => {
-        //             this.props.handler(data);
-        //         });
-        //         break;
-
-        //     default:
-        //         break;
-        // }
-
-    }
+            default:
+                break;
+        }
+    };
 
 
 
@@ -68,26 +91,35 @@ class Form extends React.Component {
         return (
             <main>
                 <div>
-                    <form onSubmit={this.handleChange}>
-                        <div>
-                            <label for="url">URL</label>
+                    <form className='myForm' onSubmit={this.handleChange}>
+                        <div className='fix'>
+                            <label htmlFor="url">URL</label>
                             <input id="url" type="url" name="url" />
-                            <button type="submit"> GO </button>
+                            <button id="btn" type="submit">
+                              
+                            GO
+                            </button>
                         </div>
-                        <div>
+                        <div className='fix'>
                             <input type="radio" value="Get " name="method" defaultChecked />
-                            <label for="method">Get</label>
+                            <label htmlFor="method">Get</label>
                             <input type="radio" value="Post " name="method" />
-                            <label for="method">Post</label>
+                            <label htmlFor="method">Post</label>
                             <input type="radio" value="Delete " name="method" />
-                            <label for="method">Delete</label>
+                            <label htmlFor="method">Delete</label>
                             <input type="radio" value="Put " name="method" />
-                            <label for="method">Put</label>
+                            <label htmlFor="method">Put</label>
+                            <textarea id='body' name='body'></textarea>
                         </div>
                     </form>
-
-
                 </div>
+                <If condition={this.state.whilefetchData === true}>
+                    <Then>
+                        <div className='fix'>
+                            <img src='https://i.gifer.com/YCZH.gif' alt='loading' width='200px'></img>
+                        </div>
+                    </Then>
+                </If>
             </main>
         )
     }
