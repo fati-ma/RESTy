@@ -13,13 +13,13 @@ main {
         margin-top: 25px;
       }
       input[type='radio'] {
-        margin-right: 25px;
+        // margin-right: 25px;
         margin-bottom: 25px;
-        visibility: hidden;
+        // visibility: hidden;
       
       }
       input[type='radio']:checked + label {
-        padding: 10px;
+        // padding: 10px;
         background: rgb(90, 87, 87);
     }
       button {
@@ -56,4 +56,19 @@ main {
   text-align: center;
   line-height: 100px;
   margin-bottom: 15px;
+}
+
+.fix {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: baseline;
+}
+
+.myForm {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  justify-content: center;
+  align-items: baseline;
 }
