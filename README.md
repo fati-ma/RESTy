@@ -3,6 +3,7 @@
 
 ### Author: Fatima Atieh
 
+[Deployed App](https://601b04a96cc7a7008e00df65--resty-app-fatima.netlify.app)
 
 ## Setup
 
