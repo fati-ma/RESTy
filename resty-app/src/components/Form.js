@@ -1,90 +1,72 @@
 import React from 'react';
 import '../styles/form.scss';
-import { If, Then, Else } from './If';
+import { If, Then } from './If';
 import superagent from 'superagent'
 
 class Form extends React.Component {
 
     constructor(props) {
         super(props);
-        // add state.words here and initialize it
         this.state = {
             url: '',
             method: '',
-            body:'',
-            whilefetchData: false
+            body: ''
         }
     }
 
     handleChange = async (e) => {
         e.preventDefault();
-        console.log(e.target.value);
-
         let url = e.target.url.value;
         let method = e.target.method.value;
-        let body = e.target.body.value
+        let body = e.target.body.value;
 
-        this.setState({ url, method });
-
-        switch (method) {
-            case 'GET':
-                await superagent
-                    .get(url)
-                    .then((data) => {
-                        let info = { url, method, body };
-                        console.log('info:', info);
-                        let history;
-                        let check;
-                        this.setState({ whilefetchData: false });
-
-                        if (localStorage.getItem('history')) {
-                            history = JSON.parse(localStorage.getItem('history'));
-                            history.forEach((element) => {
-                                element.url === info.url && element.method === info.method ? (check = true) : (check = false);
-                            });
-                            if (check) {
-                                this.props.handler(data);
-                            } else {
-                                history.push(info);
-                                localStorage.setItem('history', JSON.stringify(history));
-                                this.props.handler(data);
-                            }
-                        } else {
-                            history = [];
-                            localStorage.setItem('history', JSON.stringify(history));
-                        }
-                        console.log('history', history);
-                    })
-                    .catch((err) => {
-                        this.setState({ whilefetchData: false });
-                        console.log(err.message);
-                        this.props.errorHandler(err.message);
-                    });
-
-                break;
-            case 'POST':
-                superagent.post(url).then((data) => {
-                    this.props.handler(data);
-                });
-                break;
-            case 'DELETE':
-                superagent.delete(url).then((data) => {
-                    this.props.handler(data);
-                });
-                break;
-            case 'PUT':
-                superagent.put(url).then((data) => {
-                    this.props.handler(data);
-                });
-                break;
-
-            default:
-                break;
+        if (!body) {
+            this.setState({ url, method });
+        } else {
+            this.setState({ url, method, body });
         }
-    };
+    }
 
+    componentDidUpdate = async (prevProps, prevState, snapshot) => {
+        try {
+            if (this.state.method !== prevState.method && this.state.url !== prevState.url) {
+                if (this.state.method === 'get' || this.state.method === 'delete') {
+                    let data = await superagent(this.state.method, this.state.url)
+                    this.props.handler(data, this.state);
 
+                }
+                else if (this.state.method === 'put' || this.state.method === 'post') {
 
+                    let body = JSON.parse(this.state.body)
+                    let record = await superagent(this.state.method, this.state.url).send(body)
+                    this.props.handler(record, this.state);
+
+                }
+                let check;
+                if (localStorage.getItem('queries')) {
+                    let queries = JSON.parse(localStorage.getItem('queries'));
+                    console.log(queries)
+                    queries.forEach(obj => {
+                        if (obj.method === this.state.method && obj.url === this.state.url) {
+                            check = true;
+                        } else { check = false }
+                    });
+                    if (!check) {
+                        let queryArray = JSON.parse(localStorage.getItem('queries'));;
+                        queryArray.push(this.state);
+                        localStorage.setItem('queries', JSON.stringify(queryArray))
+                    }
+                } else {
+                    let queryArray = [];
+                    queryArray.push(this.state);
+                    localStorage.setItem('queries', JSON.stringify(queryArray))
+                }
+            }
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
 
 
     render() {
@@ -94,10 +76,9 @@ class Form extends React.Component {
                     <form className='myForm' onSubmit={this.handleChange}>
                         <div className='fix'>
                             <label htmlFor="url">URL</label>
-                            <input id="url" type="url" name="url" />
+                            <input id="url" type="url" name="url" value={this.state.url.value} />
                             <button id="btn" type="submit">
-                              
-                            GO
+                                GO
                             </button>
                         </div>
                         <div className='fix'>
@@ -113,13 +94,6 @@ class Form extends React.Component {
                         </div>
                     </form>
                 </div>
-                <If condition={this.state.whilefetchData === true}>
-                    <Then>
-                        <div className='fix'>
-                            <img src='https://i.gifer.com/YCZH.gif' alt='loading' width='200px'></img>
-                        </div>
-                    </Then>
-                </If>
             </main>
         )
     }
