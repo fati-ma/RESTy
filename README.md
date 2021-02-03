@@ -21,24 +21,32 @@
 
 5. Dependencies: 
 
-![dep](assets/dependencies.PNG)
+![dep](assets/routin.PNG)
 
 6. Run `npm run start`
 
 Now you will get something similar to the image below on `localhost:3000`
 
-![resty-1](assets/ressty-1.PNG)
+![routing-1](assets/routing.PNG)
 
 
 Then add the URL and choose the method then hit `GO`
 
-you will get something similar to this
+And then navigate through the links, in `History` you will find the histroy of urls you added along side with the method and body provided
 
-![history](assets/history.PNG)
+![history](assets/history-link.PNG)
+
+And this is what you will see after clicking on About us link
+
+![help](assets/help.PNG)
+
+A short description of how to use this app
 
 
 
 ## Deploy on Netlify
+
+*On the `main` branch
 
 1. `npm run build`
 

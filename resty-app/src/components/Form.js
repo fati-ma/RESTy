@@ -1,6 +1,5 @@
 import React from 'react';
 import '../styles/form.scss';
-import { If, Then } from './If';
 import superagent from 'superagent'
 
 class Form extends React.Component {
@@ -26,7 +25,6 @@ class Form extends React.Component {
             this.setState({ url, method, body });
         }
     }
-
     componentDidUpdate = async (prevProps, prevState, snapshot) => {
         try {
             if (this.state.method !== prevState.method && this.state.url !== prevState.url) {
@@ -46,11 +44,13 @@ class Form extends React.Component {
                 if (localStorage.getItem('queries')) {
                     let queries = JSON.parse(localStorage.getItem('queries'));
                     console.log(queries)
-                    queries.forEach(obj => {
-                        if (obj.method === this.state.method && obj.url === this.state.url) {
-                            check = true;
-                        } else { check = false }
+
+                    queries.some(obj => {
+                        if (obj.method === this.state.method && obj.url === this.state.url && JSON.stringify(obj.body) === JSON.stringify(this.state.body)) {
+                            return check = true;
+                        } else { return check = false }
                     });
+
                     if (!check) {
                         let queryArray = JSON.parse(localStorage.getItem('queries'));;
                         queryArray.push(this.state);
@@ -90,8 +90,8 @@ class Form extends React.Component {
                             <label htmlFor="method">Delete</label>
                             <input type="radio" value="Put " name="method" />
                             <label htmlFor="method">Put</label>
-                            <textarea id='body' name='body'></textarea>
                         </div>
+                        <textarea id='body' name='body'></textarea>
                     </form>
                 </div>
             </main>
