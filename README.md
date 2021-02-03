@@ -33,7 +33,7 @@ Then add the URL and choose the method then hit `GO`
 
 you will get something similar to this
 
-![resty-2](assets/ressty-2.PNG)
+![history](assets/history.PNG)
 
 
 
